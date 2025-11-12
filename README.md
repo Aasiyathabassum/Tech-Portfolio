@@ -21,8 +21,6 @@
 I architect secure, scalable, and interoperable **cloud-native data ecosystems**.  
 My work integrates **data engineering**, **governance**, and **automation** across multi-cloud environments to deliver trusted, insight-driven solutions.  
 
-I specialize in bridging technical infrastructure with strategic governance — designing hybrid architectures that enable compliant data sharing, real-time analytics, and enterprise productivity.  
-
 ---
 
 ## Architectural Competencies  
