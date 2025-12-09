@@ -1,7 +1,8 @@
-# 🌟 Professional Case Studies  
+# 🌟 # 🌟 Project Portfolio
+
 **Cloud • Data • Analytics • Secure Platforms**
 
-This repository contains curated, high-level **professional case studies** based on real-world experience in:
+This repository contains curated, high-level **professional projects** based on real-world experience in:
 
 - Cloud data platforms  
 - Data governance & security  
@@ -10,7 +11,7 @@ This repository contains curated, high-level **professional case studies** based
 
 ---
 
-## 📌 Featured Case Study #1  
+## 📌 Featured Project #1  
 
 ### 📊 Data Governance Framework for Secure Cloud Data Platforms
 **Role:** Data Governance Consultant  
@@ -69,7 +70,7 @@ Data Governance • Cloud Security • RBAC • Data Compliance & Privacy • Da
 
 ---
 
-## 📌 Featured Case Study #2  
+## 📌 Featured Project #2  
 
 🔁 Federated Knowledge & Data Sharing Framework for Secure Data Exchange  
 
