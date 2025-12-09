@@ -77,7 +77,10 @@ Data Governance • Cloud Security • RBAC • Data Compliance & Privacy • Da
 
 Contributed to the design and evaluation of a federated knowledge and data sharing framework to enable secure, governed, multi-organization data exchange. The work focused on identifying scalable architectural patterns and best-practice governance for data discovery, access, controlled sharing, and regulatory compliance.
 
-👉 [Read full case study #2 here →](./case-study-2.md)
+👉 [Read full case study →](./02-federated-data-sharing-framework.md)
+
+
+
 
 ---
 
