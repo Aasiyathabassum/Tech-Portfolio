@@ -1,4 +1,4 @@
-# 🌟 # 🌟 Project Portfolio
+#  🌟 Project Portfolio
 
 **Cloud • Data • Analytics • Secure Platforms**
 
