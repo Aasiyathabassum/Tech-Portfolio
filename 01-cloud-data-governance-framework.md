@@ -1,7 +1,5 @@
 
 
-## 📌 Featured Project #1  
-
 ### 📊 Data Governance Framework for Secure Cloud Data Platforms
 **Role:** Data Governance Consultant  
 **Domain:** Smart Manufacturing, Cloud Data Platforms  
