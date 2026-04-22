@@ -25,7 +25,7 @@ The focus is on **designing scalable, well-governed data platforms** that suppor
 
 ## 📌 Featured Projects
 
-- [Delta Lake Data Governance Pipeline](./05-delta-lake-governance-pipeline.md)
+- [Delta Lake Data Governance Pipeline](./05-delta-lake-governance-pipeline.md) 
 - [Cloud Data Governance Framework](./01-cloud-data-governance-framework.md)
 - [Federated Data Sharing Framework](./02-federated-data-sharing-framework.md)
 - [End-to-End Operational Data Pipeline](./03-end-to-end-operational-data-pipeline.md)
