@@ -1,10 +1,10 @@
-# 🔐 Delta Lake Data Governance Pipeline
+# Delta Lake Data Governance Pipeline
 **Role:** Data Engineer  
 **Focus:** Data ingestion, schema enforcement, Delta Lake governance, Unity Catalog, data quality
 
 ---
 
-## 🧭 Project Overview
+## Project Overview
 
 This project demonstrates the design and implementation of an **end-to-end data governance pipeline** using **Databricks and Unity Catalog**. Raw manufacturing sensor data is ingested, validated, and written to a governed Delta table with governance controls embedded at every stage — from schema enforcement at ingestion to constraint-based validation at write time.
 
@@ -12,7 +12,7 @@ The pipeline addresses a common real-world challenge: raw data that is unowned, 
 
 ---
 
-## 🎯 Problem Context
+##  Problem Context
 
 Organisations managing large volumes of operational data often face:
 
@@ -26,7 +26,7 @@ This project addresses these challenges by building governance directly into the
 
 ---
 
-## 🏗️ Key Contributions
+##  Key Contributions
 
 - Designed and implemented an **end-to-end governed data pipeline** on Databricks
 - Defined an **explicit schema** with nullable constraints based on business rules — replacing unreliable type inference
