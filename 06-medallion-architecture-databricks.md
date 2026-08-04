@@ -1,22 +1,24 @@
 # 🔗 Analytics Enablement Layer: Medallion Architecture on Databricks
 **Role:** Data Engineer
 **Focus:** Cloud data governance, incremental ingestion, data quality automation, and analytics-ready aggregation
-**Series:** Part 2 of *End-to-End Operational Data Pipeline* — see [Part 1: Shopfloor Capture & Hybrid Cloud Ingestion](#) for the upstream Power Platform / capture layer this project's analytics layer plugs into.
+**Series:** Part 2 of *End-to-End Operational Data Pipeline* — see [Part 1: Shopfloor Capture & Hybrid Cloud Ingestion](#) for the upstream capture layer this project's analytics layer plugs into.
 
 ---
 
-## 🧭 Overview
+## 🧭 Project Overview
 
 Part 1 of this series covers shopfloor data capture and automated ingestion into hybrid
 cloud storage. This project picks up from there and builds out the **analytics
-enablement layer**: a governed medallion pipeline (Bronze → Silver → Gold) that takes
-raw incoming records, applies schema enforcement and automated data quality validation,
-and produces business-ready aggregates — with governance, lineage, and orchestration
-built in rather than bolted on afterward.
+enablement layer**: a governed medallion pipeline (Bronze → Silver → Gold) on Databricks
+that takes raw incoming process records, applies schema enforcement and automated data
+quality validation, and produces business-ready aggregates — with governance, lineage,
+and orchestration built in rather than bolted on afterward.
 
-Built on public NYC taxi trip data (via Databricks' built-in sample datasets) to keep
-the project fully reproducible with no proprietary or licensed data, while mirroring the
-same architectural pattern used for real operational/process data.
+The pattern mirrors how manufacturing process data (e.g. from forging or machining
+operations) typically flows in practice: parameters are captured at the point of work,
+pushed through a serverless ingestion layer into cloud object storage, then refined
+into governed, analytics-ready tables — with downstream model development and BI
+dashboarding closing the loop back to operations.
 
 ---
 
@@ -44,11 +46,11 @@ same architectural pattern used for real operational/process data.
 
 ## 🛠️ Tech Stack
 
-- **Databricks** (Free Edition)
+- **Databricks** 
 - **Delta Lake** — storage layer, ACID transactions, transaction history
 - **Unity Catalog** — governance, access control, lineage, metadata
 - **Auto Loader** — incremental raw data ingestion
-- **PySpark** — data transformation
+- **PySpark** — data transformation and synthetic data generation
 - **Databricks Workflows** — pipeline orchestration
 - **Databricks SQL Dashboards** — visualization
 
@@ -56,11 +58,13 @@ same architectural pattern used for real operational/process data.
 
 ## 📦 Dataset
 
-NYC Yellow Taxi trip records, sourced from Databricks' built-in `samples.nyctaxi.trips`
-table. A slice of this data is re-partitioned into daily files and written to a landing
-volume to simulate a raw source-system feed — the same shape as data arriving from any
-upstream capture system (including the Power Platform pipeline in Part 1) — which Auto
-Loader then ingests incrementally.
+A synthetically generated dataset representing forging and machining process records —
+part ID, process type, machine ID, process start/end timestamps, temperature, vibration,
+pressure, and a pass/fail outcome — generated directly in PySpark, with no external
+download or proprietary source required. A small proportion of deliberately invalid
+values (out-of-range readings, negative sensor values, non-binary outcomes) is included
+by design, to give the Silver layer's data quality rules and CHECK constraints something
+real to detect and reject rather than passing trivially.
 
 ---
 
@@ -76,13 +80,14 @@ Loader then ingests incrementally.
 - Explicit schema enforcement (no reliance on type inference)
 - Deduplication on a defined business key
 - Null handling per documented business rules
-- A data quality rule engine checks each record against business rules before
+- A data quality rule engine checks each record against business rules — valid
+  temperature range, non-negative vibration/pressure, binary pass/fail — before
   promotion; failing records are quarantined (not discarded) for audit and reprocessing
 - CHECK constraints enforced at the table level as a second, always-on guarantee
 
 ### 3️⃣ Gold — Business-Ready Aggregates
-- Daily zone-level trip/revenue summary
-- Hourly demand pattern (trip volume by hour-of-day / day-of-week)
+- Daily process yield summary by machine and process type (pass/fail rate)
+- Process parameter trend analysis (temperature/vibration/pressure over time, by machine)
 - Optimized (OPTIMIZE + Z-ORDER) for downstream BI queries
 
 ---
@@ -101,16 +106,15 @@ Loader then ingests incrementally.
 ## ⚙️ Orchestration
 
 Bronze, Silver, and Gold stages are chained as a single Databricks Job with explicit
-task dependencies, enabling scheduled, end-to-end execution with full run history —
-the analytics-layer equivalent of the automated Power Automate workflows in Part 1.
+task dependencies, enabling scheduled, end-to-end execution with full run history.
 
 ---
 
 ## 📊 Visualization
 
 A Databricks SQL Dashboard built on the Gold tables provides both a latest-snapshot view
-and a historical trend view for monitoring pipeline output — closing the loop from raw
-data to decision-making.
+and a historical trend view of process yield and parameter stability — closing the loop
+from raw data to decision-making.
 
 ---
 
@@ -118,6 +122,9 @@ data to decision-making.
 
 - One catalog with three schemas (bronze/silver/gold) rather than three separate
   catalogs — simpler governance for a single-domain pipeline.
+- Raw data is synthetically generated rather than sourced externally, sidestepping any
+  need for proprietary process data while keeping the pipeline's governance and quality
+  logic representative of real manufacturing process records.
 - Auto Loader runs in triggered batch mode (`availableNow`), matching a Job-orchestrated
   schedule rather than continuous streaming — the same code path scales to continuous
   ingestion if source volume justified it.
@@ -125,37 +132,22 @@ data to decision-making.
   nothing is silently lost.
 - CHECK constraints are enforced in addition to the rule engine, giving a guarantee that
   holds even if a future write bypasses the notebook logic.
+- Stages are chained as a single Databricks Job with explicit task dependencies, rather
+  than left as separate, independently-run notebooks — a common pattern in exploratory
+  analytics environments where notebooks accumulate organically, but one that makes
+  execution order and failure handling implicit rather than enforced.
 
 ---
 
-## 📈 Results
-
-*(to be filled in once the pipeline has been run end to end)*
-- Rows ingested / after cleaning / quarantined:
-- Data quality pass rate by rule:
-- Gold table row counts:
-- End-to-end job run time:
-
----
-
-## 🚀 Setup & Reproduction
-
-```
-1. Clone this repository
-2. Import notebooks into a Databricks workspace (Free Edition or higher)
-3. Run 00_setup, then 00b_generate_landing_data
-4. Run the orchestration job, or execute notebooks sequentially:
-   01_bronze_ingestion → 02_silver_transform → 03_gold_aggregates
-```
-
----
 
 ## 🔍 Skills Demonstrated
 
-Delta Lake • Unity Catalog • Auto Loader • PySpark • Data Governance • Schema
-Enforcement • Data Quality Validation • CHECK Constraints • Metadata Management •
-Audit Logging • Pipeline Orchestration • Databricks SQL Dashboards
+Delta Lake • Unity Catalog • Auto Loader • PySpark • Synthetic Data Generation • Data
+Governance • Schema Enforcement • Data Quality Validation • CHECK Constraints •
+Metadata Management • Audit Logging • Pipeline Orchestration • Databricks SQL
+Dashboards
 
 ---
 
-*Uses publicly available data. No confidential or proprietary information included.*
+> ⚠️ **Disclaimer:** This project uses a synthetically generated dataset representative
+> of manufacturing process data. No confidential or proprietary information is included.
