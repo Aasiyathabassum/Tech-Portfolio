@@ -2,6 +2,50 @@
 
 A modular framework and toolkit for testing, scoring, and documenting the trustworthiness of deployed AI and ML models, built to close the gap between AI governance standards, which define principles, and AI governance practice, which requires repeatable, automated testing.
 
+## Where this fits in the AI lifecycle
+
+Assurance is not a one-off gate before release. It applies at initial testing and evaluation, at deployment sign-off, and continuously during monitoring and retraining, since a model's behavior can drift after deployment.
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "flowchart": { "htmlLabels": false },
+  "themeVariables": {
+    "primaryColor": "#EAF2F3",
+    "primaryTextColor": "#0B3C4A",
+    "primaryBorderColor": "#0F4C5C",
+    "lineColor": "#5C6B73",
+    "secondaryColor": "#1B6B75",
+    "tertiaryColor": "#EAF2F3",
+    "fontSize": "16px",
+    "edgeLabelBackground": "#ffffff"
+  }
+}}%%
+flowchart LR
+    A["Business Case"] --> B["Data<br/>Preparation"]
+    B --> C["Modelling"]
+    C --> D["Testing and<br/>Evaluation"]
+    D --> E["Deployment"]
+    E --> F["Monitoring and<br/>Retraining"]
+    F -.->|retrain loop| C
+
+    W(["AI Assurance<br/>Workbench"])
+    W -.->|assures| D
+    W -.->|assures| E
+    W -.->|continuous checks| F
+
+    classDef workbench fill:#0F4C5C,color:#ffffff,stroke:#0B3C4A,stroke-width:2px;
+    class W workbench;
+```
+
+## Why this exists
+
+Vision and ML models are increasingly deployed in safety and quality critical industrial settings, but proving a model is safe, robust, fair, and explainable is still largely a manual, ad-hoc process. Dozens of open-source assurance tools exist (explainability libraries, adversarial robustness toolkits, fairness and drift checkers, model documentation generators), but each one is typically wired into a specific model's inputs and outputs by hand, on a case-by-case basis.
+
+This project standardizes that process: define a common model-submission schema, map recognized AI governance standards onto a consistent set of testable pillars, and automatically generate and run the right combination of tests for a given model, producing a scored, human-readable assurance report.
+
+## Architecture
+
 ```mermaid
 %%{init: {
   "theme": "base",
@@ -12,64 +56,30 @@ A modular framework and toolkit for testing, scoring, and documenting the trustw
     "primaryBorderColor": "#0B3C4A",
     "lineColor": "#5C6B73",
     "secondaryColor": "#1B6B75",
-    "secondaryTextColor": "#ffffff",
     "tertiaryColor": "#EAF2F3",
-    "clusterBkg": "#EAF2F3",
-    "clusterBorder": "#0F4C5C",
     "fontSize": "16px",
     "edgeLabelBackground": "#ffffff"
   }
 }}%%
-flowchart TD
-    subgraph INPUT["MODEL SUBMISSION"]
-        A["Model Owner /<br/>Engineering Team"]
-        B["Model + Submission<br/>Schema"]
-        A --> B
-    end
+flowchart LR
+    A["Model Owner"] --> B["Submit Model<br/>+ Schema"]
+    B --> C["AI Assurance<br/>Workbench"]
+    C --> D["Explainability"]
+    C --> E["Robustness and<br/>Security"]
+    C --> F["Fairness and<br/>Data Quality"]
+    C --> G["Accountability"]
+    D --> H["Assurance<br/>Report"]
+    E --> H
+    F --> H
+    G --> H
+    H --> I["Governance<br/>Review"]
+    I -.->|feedback| A
 
-    subgraph STD["STANDARDS MAPPING"]
-        D[("Governance Standards")]
-        E["Standards-to-Pillars<br/>Mapping"]
-        D --> E
-    end
-
-    subgraph CORE["ASSURANCE WORKBENCH - TEST ORCHESTRATION"]
-        C["Test Plan<br/>Generator"]
-        F["Explainability<br/>Module"]
-        G["Robustness and<br/>Security Module"]
-        H["Fairness and<br/>Data Quality Module"]
-        I["Accountability<br/>Module"]
-        C --> F
-        C --> G
-        C --> H
-        C --> I
-    end
-
-    subgraph OUT["REPORTING AND DECISION"]
-        J["Scorecard<br/>Aggregation"]
-        K["Assurance Report<br/>and Dashboard"]
-        L["Governance<br/>Reviewer"]
-        M["Acceptance<br/>Decision"]
-        J --> K --> L --> M
-    end
-
-    B --> C
-    E --> C
-    F --> J
-    G --> J
-    H --> J
-    I --> J
-    M -.->|feedback| A
-
-    classDef core fill:#0F4C5C,color:#ffffff,stroke:#0B3C4A,stroke-width:2px;
-    class C,F,G,H,I core;
+    classDef pillar fill:#1B6B75,color:#ffffff,stroke:#0B3C4A,stroke-width:2px;
+    class D,E,F,G pillar;
 ```
 
-## Why this exists
-
-Vision and ML models are increasingly deployed in safety and quality critical industrial settings, but proving a model is safe, robust, fair, and explainable is still largely a manual, ad-hoc process. Dozens of open-source assurance tools exist (explainability libraries, adversarial robustness toolkits, fairness and drift checkers, model documentation generators), but each one is typically wired into a specific model's inputs and outputs by hand, on a case-by-case basis.
-
-This project standardizes that process: define a common model-submission schema, map recognized AI governance standards onto a consistent set of testable pillars, and automatically generate and run the right combination of tests for a given model, producing a scored, human-readable assurance report.
+A model owner submits a model along with a schema describing its architecture, data, intended use, and acceptance criteria. The workbench runs the relevant pillar tests against it, aggregates the results into an assurance report, and a governance reviewer signs off or sends feedback back to the model owner.
 
 ## Project journey
 
@@ -113,42 +123,6 @@ The pillar framework is designed to map onto, not replace, existing AI governanc
 - BSI PAS 1085
 - ISO/IEC TR 24028
 - ENISA AI security guidance
-
-## Where assurance plugs into the AI lifecycle
-
-Assurance is not a one-off gate before release. It applies at initial testing and evaluation, at deployment sign-off, and continuously during monitoring and retraining, since a model's behavior can drift after deployment.
-
-```mermaid
-%%{init: {
-  "theme": "base",
-  "flowchart": { "htmlLabels": false },
-  "themeVariables": {
-    "primaryColor": "#EAF2F3",
-    "primaryTextColor": "#0B3C4A",
-    "primaryBorderColor": "#0F4C5C",
-    "lineColor": "#5C6B73",
-    "secondaryColor": "#1B6B75",
-    "tertiaryColor": "#EAF2F3",
-    "fontSize": "16px",
-    "edgeLabelBackground": "#ffffff"
-  }
-}}%%
-flowchart LR
-    A["Business Case"] --> B["Data<br/>Preparation"]
-    B --> C["Modelling"]
-    C --> D["Testing and<br/>Evaluation"]
-    D --> E["Deployment"]
-    E --> F["Monitoring and<br/>Retraining"]
-    F -.->|retrain loop| C
-
-    W(["AI Assurance<br/>Workbench"])
-    W -.->|assures| D
-    W -.->|assures| E
-    W -.->|continuous checks| F
-
-    classDef workbench fill:#0F4C5C,color:#ffffff,stroke:#0B3C4A,stroke-width:2px;
-    class W workbench;
-```
 
 ## Architectural principles
 
